@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lecture/Pages/first.dart';
+import 'package:flutter_lecture/Pages/list.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +16,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const First(),
+      home: const ListPage(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
