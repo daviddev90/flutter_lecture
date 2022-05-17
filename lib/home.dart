@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
@@ -11,7 +9,35 @@ class Home extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Flutter'),
       ),
-      body: Center(),
+      body: Center(
+        child: Column(
+          children: [
+            Image.asset(
+              'images/turtle.gif',
+              width: 50,
+              height: 150,
+            ),
+            Image.asset(
+              'images/turtle.gif',
+              width: 50,
+              height: 160,
+              fit: BoxFit.contain,
+            ),
+            Image.asset(
+              'images/turtle.gif',
+              width: 50,
+              height: 150,
+              fit: BoxFit.fill,
+            ),
+            Image.asset(
+              'images/turtle.gif',
+              width: 50,
+              height: 150,
+              fit: BoxFit.cover,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
