@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lecture/Pages/screen.dart';
 import 'package:flutter_lecture/Pages/received.dart';
 import 'package:flutter_lecture/Pages/sent.dart';
+import 'package:flutter_lecture/home.dart';
 
 class MyRouter extends StatelessWidget {
   const MyRouter({Key? key}) : super(key: key);
@@ -10,7 +10,7 @@ class MyRouter extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
-        '/': (context) => const Screen(),
+        '/': (context) => const Home(),
         '/received': (context) => const Received(),
         '/sent': (context) => const Sent(),
       },

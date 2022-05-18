@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_lecture/drawer.dart';
 
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
@@ -6,75 +7,46 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Drawer'),
-      ),
-      body: const Center(
-        child: Text('Drawer'),
-      ),
-      drawer: Drawer(
-          child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          const UserAccountsDrawerHeader(
-            currentAccountPicture: CircleAvatar(
-              backgroundImage: AssetImage('images/pikachu-1.jpg'),
-            ),
-            otherAccountsPictures: [
-              CircleAvatar(
-                backgroundImage: AssetImage('images/pikachu-2.jpg'),
+        appBar: AppBar(
+          centerTitle: false,
+          title: const Text('네이버 메일'),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/received');
+                },
+                icon: const Icon(Icons.email)),
+            IconButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/sent');
+                },
+                icon: const Icon(Icons.email_outlined))
+          ],
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/received');
+                  },
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(Colors.green)),
+                  child: const Text('받은 메일함')),
+              const SizedBox(
+                height: 12,
               ),
-              CircleAvatar(
-                backgroundImage: AssetImage('images/pikachu-3.jpg'),
-              )
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/sent');
+                  },
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(Colors.red)),
+                  child: const Text('보낸 메일함')),
             ],
-            accountName: Text('신동원'),
-            accountEmail: Text('dongwon@dongwon.co.kr'),
-            decoration: BoxDecoration(
-              color: Colors.red,
-              borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(40),
-                  bottomRight: Radius.circular(40)),
-            ),
           ),
-          ListTile(
-            leading: const Icon(
-              Icons.home,
-              color: Colors.black,
-            ),
-            title: const Text('Home'),
-            onTap: () => _showDialog(context, '홈'),
-          ),
-          ListTile(
-            leading: const Icon(
-              Icons.phone,
-              color: Colors.black,
-            ),
-            title: const Text('Phone'),
-            onTap: () => _showDialog(context, '휴대폰'),
-          ),
-          ListTile(
-            leading: const Icon(
-              Icons.home,
-              color: Colors.black,
-            ),
-            title: const Text('Home'),
-            onTap: () => _showDialog(context, '홈'),
-          ),
-        ],
-      )),
-    );
+        ),
+        drawer: const MyDrawer());
   }
-}
-
-void _showDialog(BuildContext context, String text) {
-  // 경고창을 보여주는 가장 흔한 방법.
-  showDialog(
-      context: context,
-      builder: (BuildContext ctx) {
-        return AlertDialog(
-          title: Text('선택 완료!'),
-          content: Text('$text 항목을 선택했습니다.'),
-        );
-      });
 }
