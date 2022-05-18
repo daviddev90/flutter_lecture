@@ -23,14 +23,15 @@ class Home extends StatelessWidget {
         barrierDismissible: false, //종료버튼 눌러야만 종료
         builder: (BuildContext ctx) {
           return AlertDialog(
-            title: const Text('Alert Title'),
-            content: const Text('Hello world를 Touch 했습니다.'),
+            title: const Text('페이지 이동'),
+            content: const Text('아래 버튼을 누르면 페이지를 이동합니다.'),
             actions: [
               TextButton(
                   onPressed: () {
                     Navigator.of(ctx).pop();
+                    Navigator.pushNamed(context, '/2nd');
                   },
-                  child: const Text('종료'))
+                  child: const Text('이동'))
             ],
           );
         });
