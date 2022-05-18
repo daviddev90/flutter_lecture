@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lecture/drawer.dart';
 
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
@@ -10,43 +9,30 @@ class Home extends StatelessWidget {
         appBar: AppBar(
           centerTitle: false,
           title: const Text('네이버 메일'),
-          actions: [
-            IconButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/received');
-                },
-                icon: const Icon(Icons.email)),
-            IconButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/sent');
-                },
-                icon: const Icon(Icons.email_outlined))
-          ],
         ),
         body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
+            child: GestureDetector(
+                onTap: () => {_showDialog(context)},
+                child: const Text('Hello world'))));
+  }
+
+  // --functions
+  _showDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        barrierDismissible: false, //종료버튼 눌러야만 종료
+        builder: (BuildContext ctx) {
+          return AlertDialog(
+            title: const Text('Alert Title'),
+            content: const Text('Hello world를 Touch 했습니다.'),
+            actions: [
+              TextButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/received');
+                    Navigator.of(ctx).pop();
                   },
-                  style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.green)),
-                  child: const Text('받은 메일함')),
-              const SizedBox(
-                height: 12,
-              ),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/sent');
-                  },
-                  style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.red)),
-                  child: const Text('보낸 메일함')),
+                  child: const Text('종료'))
             ],
-          ),
-        ),
-        drawer: const MyDrawer());
+          );
+        });
   }
 }
