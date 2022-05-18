@@ -8,56 +8,54 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   //property
-  late String _buttonState;
-  late String _buttonTitle;
-  late Color _buttonColor;
+  late bool switchValue;
+  late Color btnColor;
 
   @override
   void initState() {
-    _buttonState = 'ON';
-    _buttonTitle = '버튼을 누르세요!';
-    _buttonColor = Colors.red;
+    switchValue = false;
+    btnColor = Colors.red;
     super.initState();
   }
 
-  void changeBtnState() {
+  void changeSwitchState() {
     setState(() {
-      if (_buttonState == 'ON') {
-        _buttonState = 'OFF';
-        _buttonTitle = 'Press the Button';
-        _buttonColor = Colors.yellow;
+      switchValue = !switchValue;
+      if (switchValue) {
+        btnColor = Colors.blue;
       } else {
-        _buttonState = 'ON';
-        _buttonTitle = '버튼을 누르세요';
-        _buttonColor = Colors.red;
+        btnColor = Colors.red;
       }
     });
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Flutter Life Cycle'),
+        title: const Text('Switch'),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ElevatedButton(
               onPressed: () {
-                changeBtnState();
+                changeSwitchState();
               },
-              style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(160, 48), primary: _buttonColor),
-              child: Text(_buttonTitle),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Text('버튼상태: $_buttonState')
-          ],
-        ),
-      ),
+              style: ElevatedButton.styleFrom(primary: btnColor),
+              child: const Text('Flutter')),
+          const SizedBox(
+            height: 30,
+          ),
+          Switch(
+              value: switchValue,
+              //switchValue: 화면에 보이는 value
+              onChanged: (value) {
+                changeSwitchState();
+              }),
+        ],
+      )),
     );
   }
 }
