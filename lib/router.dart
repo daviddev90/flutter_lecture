@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lecture/Pages/second.dart';
 import 'package:flutter_lecture/home.dart';
 
 class MyRouter extends StatelessWidget {
@@ -10,7 +9,6 @@ class MyRouter extends StatelessWidget {
     return MaterialApp(
       routes: {
         '/': (context) => const Home(),
-        '/2nd': (context) => const SecondPage(),
       },
       initialRoute: '/',
       debugShowCheckedModeBanner: false,

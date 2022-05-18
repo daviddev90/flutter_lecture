@@ -1,39 +1,63 @@
 import 'package:flutter/material.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  //property
+  late String _buttonState;
+  late String _buttonTitle;
+  late Color _buttonColor;
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          centerTitle: false,
-          title: const Text('네이버 메일'),
-        ),
-        body: Center(
-            child: GestureDetector(
-                onTap: () => {_showDialog(context)},
-                child: const Text('Hello world'))));
+  void initState() {
+    _buttonState = 'ON';
+    _buttonTitle = '버튼을 누르세요!';
+    _buttonColor = Colors.red;
+    super.initState();
   }
 
-  // --functions
-  _showDialog(BuildContext context) {
-    showDialog(
-        context: context,
-        barrierDismissible: false, //종료버튼 눌러야만 종료
-        builder: (BuildContext ctx) {
-          return AlertDialog(
-            title: const Text('페이지 이동'),
-            content: const Text('아래 버튼을 누르면 페이지를 이동합니다.'),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(ctx).pop();
-                    Navigator.pushNamed(context, '/2nd');
-                  },
-                  child: const Text('이동'))
-            ],
-          );
-        });
+  void changeBtnState() {
+    setState(() {
+      if (_buttonState == 'ON') {
+        _buttonState = 'OFF';
+        _buttonTitle = 'Press the Button';
+        _buttonColor = Colors.yellow;
+      } else {
+        _buttonState = 'ON';
+        _buttonTitle = '버튼을 누르세요';
+        _buttonColor = Colors.red;
+      }
+    });
+  }
+
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Flutter Life Cycle'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                changeBtnState();
+              },
+              style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(160, 48), primary: _buttonColor),
+              child: Text(_buttonTitle),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Text('버튼상태: $_buttonState')
+          ],
+        ),
+      ),
+    );
   }
 }
