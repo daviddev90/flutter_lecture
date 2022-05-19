@@ -8,69 +8,68 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   //property
-  late int count;
+  late TextEditingController textEditingController;
 
   @override
   void initState() {
-    count = 0;
+    textEditingController = TextEditingController();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Count'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('현재 카운트는 $count 입니다.'),
-            const SizedBox(
-              height: 50,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                FloatingActionButton(
-                  //body 안에 있으면 화면 스크롤되면 같이 움직임
+    return GestureDetector(
+      //scaffold를 감싸고 아래 내용을 줘야 키보드를 없앨 수 있다.
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Single Textfield'),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            children: [
+              TextField(
+                controller: textEditingController,
+                decoration: const InputDecoration(labelText: '글자를 입력하세요'),
+                keyboardType: TextInputType.text,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              ElevatedButton(
                   onPressed: () {
-                    setState(() {
-                      count++;
-                    });
+                    //사용자의 입력 내용 확인
+                    if (textEditingController.text.trim().isEmpty) {
+                      errorSnackBar(context);
+                    } else {
+                      showSnackBar(context);
+                    }
                   },
-                  child: const Icon(Icons.add),
-                ),
-                const SizedBox(
-                  width: 30,
-                ),
-                FloatingActionButton(
-                  //body 안에 있으면 화면 스크롤되면 같이 움직임
-                  onPressed: () {
-                    setState(() {
-                      count--;
-                    });
-                  },
-                  backgroundColor: Colors.red,
-                  child: const Icon(
-                    Icons.remove,
-                  ),
-                )
-              ],
-            )
-          ],
+                  child: const Text('출력'))
+            ],
+          ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        //얘는 화면 스크롤되어도 안 움직임
-        onPressed: () {
-          setState(() {
-            count++;
-          });
-        },
-        child: const Icon(Icons.add),
-      ),
     );
+  }
+
+  // -- Functions
+  errorSnackBar(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text('글자를 입력하세요'),
+      duration: Duration(seconds: 1),
+      backgroundColor: Colors.red,
+    ));
+  }
+
+  showSnackBar(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text('입력한 글자는 ${textEditingController.text} 입니다.'),
+      duration: const Duration(seconds: 1),
+      backgroundColor: Colors.blue,
+    ));
   }
 }
