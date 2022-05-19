@@ -8,54 +8,69 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   //property
-  late bool switchValue;
-  late Color btnColor;
+  late int count;
 
   @override
   void initState() {
-    switchValue = false;
-    btnColor = Colors.red;
+    count = 0;
     super.initState();
-  }
-
-  void changeSwitchState() {
-    setState(() {
-      switchValue = !switchValue;
-      if (switchValue) {
-        btnColor = Colors.blue;
-      } else {
-        btnColor = Colors.red;
-      }
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Switch'),
+        title: const Text('Count'),
       ),
       body: Center(
-          child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ElevatedButton(
-              onPressed: () {
-                changeSwitchState();
-              },
-              style: ElevatedButton.styleFrom(primary: btnColor),
-              child: const Text('Flutter')),
-          const SizedBox(
-            height: 30,
-          ),
-          Switch(
-              value: switchValue,
-              //switchValue: 화면에 보이는 value
-              onChanged: (value) {
-                changeSwitchState();
-              }),
-        ],
-      )),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('현재 카운트는 $count 입니다.'),
+            const SizedBox(
+              height: 50,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                FloatingActionButton(
+                  //body 안에 있으면 화면 스크롤되면 같이 움직임
+                  onPressed: () {
+                    setState(() {
+                      count++;
+                    });
+                  },
+                  child: const Icon(Icons.add),
+                ),
+                const SizedBox(
+                  width: 30,
+                ),
+                FloatingActionButton(
+                  //body 안에 있으면 화면 스크롤되면 같이 움직임
+                  onPressed: () {
+                    setState(() {
+                      count--;
+                    });
+                  },
+                  backgroundColor: Colors.red,
+                  child: const Icon(
+                    Icons.remove,
+                  ),
+                )
+              ],
+            )
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        //얘는 화면 스크롤되어도 안 움직임
+        onPressed: () {
+          setState(() {
+            count++;
+          });
+        },
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }
