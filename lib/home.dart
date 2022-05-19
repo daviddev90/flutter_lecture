@@ -8,11 +8,15 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   //property
-  late TextEditingController textEditingController;
+  late TextEditingController firstController;
+  late TextEditingController secondController;
+  late double calcResult;
 
   @override
   void initState() {
-    textEditingController = TextEditingController();
+    firstController = TextEditingController();
+    secondController = TextEditingController();
+    calcResult = 0;
     super.initState();
   }
 
@@ -31,24 +35,59 @@ class _HomeState extends State<Home> {
           padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
+              Text('결과: $calcResult'),
               TextField(
-                controller: textEditingController,
-                decoration: const InputDecoration(labelText: '글자를 입력하세요'),
-                keyboardType: TextInputType.text,
+                controller: firstController,
+                keyboardType: TextInputType.number,
+              ),
+              TextField(
+                controller: secondController,
+                keyboardType: TextInputType.number,
               ),
               const SizedBox(
                 height: 20,
               ),
-              ElevatedButton(
-                  onPressed: () {
-                    //사용자의 입력 내용 확인
-                    if (textEditingController.text.trim().isEmpty) {
-                      errorSnackBar(context);
-                    } else {
-                      showSnackBar(context);
-                    }
-                  },
-                  child: const Text('출력'))
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  FloatingActionButton(
+                    onPressed: () {
+                      setState(() {
+                        calcResult = double.parse(firstController.text) +
+                            double.parse(secondController.text);
+                      });
+                    },
+                    child: const Icon(Icons.add),
+                  ),
+                  FloatingActionButton(
+                    onPressed: () {
+                      setState(() {
+                        calcResult = double.parse(firstController.text) -
+                            double.parse(secondController.text);
+                      });
+                    },
+                    child: const Icon(Icons.remove),
+                  ),
+                  FloatingActionButton(
+                    onPressed: () {
+                      setState(() {
+                        calcResult = double.parse(firstController.text) *
+                            double.parse(secondController.text);
+                      });
+                    },
+                    child: const Icon(Icons.close),
+                  ),
+                  FloatingActionButton(
+                    onPressed: () {
+                      setState(() {
+                        calcResult = double.parse(firstController.text) /
+                            double.parse(secondController.text);
+                      });
+                    },
+                    child: const Icon(Icons.percent),
+                  ),
+                ],
+              )
             ],
           ),
         ),
@@ -57,19 +96,5 @@ class _HomeState extends State<Home> {
   }
 
   // -- Functions
-  errorSnackBar(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text('글자를 입력하세요'),
-      duration: Duration(seconds: 1),
-      backgroundColor: Colors.red,
-    ));
-  }
 
-  showSnackBar(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text('입력한 글자는 ${textEditingController.text} 입니다.'),
-      duration: const Duration(seconds: 1),
-      backgroundColor: Colors.blue,
-    ));
-  }
 }
