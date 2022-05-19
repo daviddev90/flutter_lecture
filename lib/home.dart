@@ -8,16 +8,94 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   //property
-  late TextEditingController firstController;
-  late TextEditingController secondController;
-  late double calcResult;
+  late TextEditingController num1;
+  late TextEditingController num2;
+
+  late TextEditingController add;
+  late TextEditingController substract;
+  late TextEditingController multiple;
+  late TextEditingController divide;
+
+  late bool _addS;
+  late bool _substractS;
+  late bool _multipleS;
+  late bool _divideS;
 
   @override
   void initState() {
-    firstController = TextEditingController();
-    secondController = TextEditingController();
-    calcResult = 0;
+    num1 = TextEditingController();
+    num2 = TextEditingController();
+
+    add = TextEditingController();
+    substract = TextEditingController();
+    multiple = TextEditingController();
+    divide = TextEditingController();
+
+    _addS = false;
+    _substractS = false;
+    _multipleS = false;
+    _divideS = false;
+
     super.initState();
+  }
+
+  void calAdd() {
+    if (_addS) {
+      if (num1.text.trim().isEmpty || num2.text.trim().isEmpty) {
+        add.text = '';
+      } else {
+        add.text = (int.parse(num1.text) + int.parse(num2.text)).toString();
+      }
+    } else {
+      add.text = '';
+    }
+  }
+
+  void calSubstract() {
+    if (_substractS) {
+      if (num1.text.trim().isEmpty || num2.text.trim().isEmpty) {
+        substract.text = '';
+      } else {
+        substract.text =
+            (int.parse(num1.text) - int.parse(num2.text)).toString();
+      }
+    } else {
+      substract.text = '';
+    }
+  }
+
+  void calMultiple() {
+    if (_multipleS) {
+      if (num1.text.trim().isEmpty || num2.text.trim().isEmpty) {
+        multiple.text = '';
+      } else {
+        multiple.text =
+            (int.parse(num1.text) * int.parse(num2.text)).toString();
+      }
+    } else {
+      multiple.text = '';
+    }
+  }
+
+  void calDivide() {
+    if (_divideS) {
+      if (num1.text.trim().isEmpty || num2.text.trim().isEmpty) {
+        divide.text = '';
+      } else {
+        divide.text = (int.parse(num1.text) / int.parse(num2.text)).toString();
+      }
+    } else {
+      divide.text = '';
+    }
+  }
+
+  void remove() {
+    num1.text = '';
+    num2.text = '';
+    add.text = '';
+    substract.text = '';
+    multiple.text = '';
+    divide.text = '';
   }
 
   @override
@@ -29,66 +107,108 @@ class _HomeState extends State<Home> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Single Textfield'),
+          title: const Text('간단한 계산기'),
         ),
         body: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              Text('결과: $calcResult'),
-              TextField(
-                controller: firstController,
-                keyboardType: TextInputType.number,
-              ),
-              TextField(
-                controller: secondController,
-                keyboardType: TextInputType.number,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  FloatingActionButton(
-                    onPressed: () {
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                TextField(
+                  controller: num1,
+                  decoration: const InputDecoration(labelText: '첫번째 숫자를 입력하세요'),
+                  keyboardType: TextInputType.number,
+                ),
+                TextField(
+                  controller: num2,
+                  decoration: const InputDecoration(labelText: '첫번째 숫자를 입력하세요'),
+                  keyboardType: TextInputType.number,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                        onPressed: () {
+                          calAdd();
+                          calSubstract();
+                          calMultiple();
+                          calDivide();
+                        },
+                        style: ElevatedButton.styleFrom(primary: Colors.blue),
+                        child: const Text('계산하기')),
+                    const SizedBox(
+                      width: 30,
+                    ),
+                    ElevatedButton(
+                        onPressed: () {
+                          remove();
+                        },
+                        style: ElevatedButton.styleFrom(primary: Colors.red),
+                        child: const Text('지우기'))
+                  ],
+                ),
+                SwitchListTile(
+                    value: _addS,
+                    title: const Text('덧셈'),
+                    onChanged: (bool userValue) {
                       setState(() {
-                        calcResult = double.parse(firstController.text) +
-                            double.parse(secondController.text);
+                        _addS = userValue;
                       });
+                      calAdd();
                     },
-                    child: const Icon(Icons.add),
-                  ),
-                  FloatingActionButton(
-                    onPressed: () {
+                    secondary: const Icon(Icons.add)),
+                SwitchListTile(
+                    value: _substractS,
+                    title: const Text('뺄셈'),
+                    onChanged: (bool userValue) {
                       setState(() {
-                        calcResult = double.parse(firstController.text) -
-                            double.parse(secondController.text);
+                        _substractS = userValue;
                       });
+                      calSubstract();
                     },
-                    child: const Icon(Icons.remove),
-                  ),
-                  FloatingActionButton(
-                    onPressed: () {
+                    secondary: const Icon(Icons.remove)),
+                SwitchListTile(
+                    value: _multipleS,
+                    title: const Text('곱셈'),
+                    onChanged: (bool userValue) {
                       setState(() {
-                        calcResult = double.parse(firstController.text) *
-                            double.parse(secondController.text);
+                        _multipleS = userValue;
                       });
+                      calMultiple();
                     },
-                    child: const Icon(Icons.close),
-                  ),
-                  FloatingActionButton(
-                    onPressed: () {
+                    secondary: const Icon(Icons.close)),
+                SwitchListTile(
+                    value: _divideS,
+                    title: const Text('나눗셈'),
+                    onChanged: (bool userValue) {
                       setState(() {
-                        calcResult = double.parse(firstController.text) /
-                            double.parse(secondController.text);
+                        _divideS = userValue;
                       });
+                      calDivide();
                     },
-                    child: const Icon(Icons.percent),
-                  ),
-                ],
-              )
-            ],
+                    secondary: const Icon(Icons.percent)),
+                TextField(
+                  readOnly: true,
+                  controller: add,
+                  decoration: const InputDecoration(labelText: '덧셈 결과'),
+                ),
+                TextField(
+                  readOnly: true,
+                  controller: substract,
+                  decoration: const InputDecoration(labelText: '뺄셈 결과'),
+                ),
+                TextField(
+                  readOnly: true,
+                  controller: multiple,
+                  decoration: const InputDecoration(labelText: '곱셈 결과'),
+                ),
+                TextField(
+                  readOnly: true,
+                  controller: divide,
+                  decoration: const InputDecoration(labelText: '나눗셈 결과'),
+                ),
+              ],
+            ),
           ),
         ),
       ),
