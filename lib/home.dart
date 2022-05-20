@@ -17,9 +17,9 @@ class _HomeState extends State<Home> {
     imgIdx = 0;
   }
 
-  void _horswipe(SwipeDirection direction){
+  void _changeIdx(bool isRight){
     setState(() {
-      if(direction == SwipeDirection.left){
+      if(isRight){
         imgIdx += 1;
         if(imgIdx >= 13){
           imgIdx = 0;
@@ -32,23 +32,6 @@ class _HomeState extends State<Home> {
       }
     });
   }
-
-  void _verswipe(SwipeDirection direction){
-    setState(() {
-      if(direction == SwipeDirection.down){
-        imgIdx += 1;
-        if(imgIdx >= 13){
-          imgIdx = 0;
-        }
-      }else{
-        imgIdx -= 1;
-        if(imgIdx < 0){
-          imgIdx = 12;
-        }
-      }
-    });
-  }
-
 
   @override
   Widget build(BuildContext context) {
@@ -56,20 +39,60 @@ class _HomeState extends State<Home> {
         appBar: AppBar(
           title: const Text('Image Swiping'),
         ),
-        body: SimpleGestureDetector(
-          onHorizontalSwipe: _horswipe,
-          onVerticalSwipe: _verswipe,
-          child: Center(
+        body: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset(
-                  'images/$imgIdx.jpeg'
+                Text('여행지-${imgIdx+1}'),
+                Stack(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            _changeIdx(false);
+                          }, icon: const Icon(Icons.arrow_left)),
+                          Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.blueAccent,
+                                width: 10
+                              ),
+                              borderRadius: BorderRadius.circular(20)
+                            ),
+                            child: Image.asset(
+                              'images/$imgIdx.jpeg',width: 280,height: 600,fit: BoxFit.fill,
+                            ),
+                          ),
+                        IconButton(
+                          onPressed: () {
+                            _changeIdx(true);
+                          }, icon: const Icon(Icons.arrow_right)),
+                      ],
+                    ),
+                    Positioned(
+                      right: 12,
+                      top: 12,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.cyanAccent,
+                            width: 5
+                          )
+                        ),
+                        child:Image.asset('images/${imgIdx < 12 ? imgIdx + 1 : 0}.jpeg',
+                        width: 100,
+                        height: 80,
+                        fit: BoxFit.fill,
+                        ),
+                      ),
+                    ),
+                  ],
                 )
               ],
             ),
           ),
-        ),
       );
   }
 
