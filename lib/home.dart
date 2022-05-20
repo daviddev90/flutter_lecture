@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
@@ -9,62 +8,63 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   //property
-  late String strr;
-  late int idx;
-  late String target;
+  late bool _isOn;
+  late bool _isSmall;
 
   @override
   void initState() {
-    super.initState();
-    target = '';
-    strr = '';
-    idx = 0;
+    //앱 실행 시 한 번만 실행;
+    _isOn = true;
+    _isSmall = true;
 
-    Timer.periodic(const Duration(milliseconds: 150), (Timer timer){
-      setState(() {
-        idx++;
-        strr = (target).substring(0,(idx%target.length + 1));
-      });
-    });
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(
-        child: Column(
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.pink
-              ),
-              child: Center(
-              child: Text('hi'),
-            )),
-            Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: TextField(onChanged: (value) {
-          setState(() {
-              target = value;
-          });
-        },  
-        decoration: const InputDecoration(
-          labelText: '글귀를 입력하세요'
-        ),
-        ),
-            ),
-          ],
-        )
-      ),
         appBar: AppBar(
-          title: const Text('전광판'),
+          title: const Text('점등행사'),
         ),
         body: Center(
-          child: Text(strr,
-          style: const TextStyle(
-            fontSize: 25,
-          ),),
-        )
-      );
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 300,
+                height: 500,
+                child: Center(
+                    child: Image.asset(
+                  _isOn ? 'images/lamp_on.png' : 'images/lamp_off.png',
+                  width: _isSmall ? 100 : 200,
+                )),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                      onPressed: () {
+                        setState(() {
+                          _isSmall = !_isSmall;
+                        });
+                      },
+                      child: Text(_isSmall ? '전구 크게' : '전구 작게')),
+                  Column(
+                    children: [
+                      const Text('전구 스위치'),
+                      Switch(
+                          value: _isOn,
+                          onChanged: (value) {
+                            setState(() {
+                              _isOn = !_isOn;
+                            });
+                          })
+                    ],
+                  )
+                ],
+              )
+            ],
+          ),
+        ));
   }
 }
