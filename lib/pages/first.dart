@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lecture/animal_item.dart';
+import 'package:flutter_lecture/flag_item.dart';
 
 class FirstPage extends StatefulWidget {
-  final List<Animal> list;
-
+  final List<Flag> list;
   const FirstPage({Key? key, required this.list}) : super(key: key);
 
   @override
@@ -14,42 +13,47 @@ class _FirstPageState extends State<FirstPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: ListView.builder(
-            itemCount: widget.list.length, //위의 클래스에 있는 list
-            itemBuilder: (context, idx) {
-              return GestureDetector(
-                onTap: () {
-                  _showAlert(context, widget.list[idx]);
-                },
-                child: Card(
-                  child: Row(
-                    children: [
-                      Image.asset(
-                        widget.list[idx].imgPath,
-                        height: 100,
-                        width: 100,
-                        fit: BoxFit.contain,
-                      ),
-                      Text(widget.list[idx].name)
-                    ],
-                  ),
+        body: ListView.builder(
+      itemCount: widget.list.length,
+      itemBuilder: (context, idx) {
+        return Padding(
+          padding: const EdgeInsets.all(2.0),
+          child: GestureDetector(
+            onTap: () {
+              _showDialog(context, widget.list[idx]);
+            },
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Image.asset(
+                      widget.list[idx].imagePath,
+                      width: 90,
+                    ),
+                    const SizedBox(
+                      width: 30,
+                    ),
+                    Text('${widget.list[idx].name.substring(0, 1)}__________'),
+                  ],
                 ),
-              );
-            }),
-      ),
-    );
+              ),
+            ),
+          ),
+        );
+      },
+    ));
   }
 
-  _showAlert(BuildContext context, Animal animal) {
+  _showDialog(BuildContext context, Flag flag) {
     showDialog(
         context: context,
         builder: (BuildContext ctx) {
           return AlertDialog(
-            title: Text(animal.name),
-            content: Text('이 동물은 ${animal.species} 입니다.'),
+            title: const Text('국가명'),
+            content: Text('이 국가는 ${flag.name} 입니다.'),
             actions: [
-              TextButton(
+              ElevatedButton(
                   onPressed: () {
                     Navigator.of(ctx).pop();
                   },
