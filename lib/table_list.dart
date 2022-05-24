@@ -31,7 +31,8 @@ class _TableListState extends State<TableList> {
         actions: [
           IconButton(
               onPressed: () {
-                //
+                Navigator.pushNamed(context, '/insert')
+                    .then((value) => rebuildData());
               },
               icon: const Icon(Icons.add_outlined))
         ],
@@ -73,5 +74,14 @@ class _TableListState extends State<TableList> {
             }),
       ),
     );
+  }
+
+  rebuildData() {
+    setState(() {
+      if (Message.action) {
+        todoList.add(Message.todolist);
+        Message.action = false;
+      }
+    });
   }
 }
