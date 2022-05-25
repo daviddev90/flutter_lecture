@@ -54,9 +54,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       appBar: AppBar(
         title: const Text('Listview Test'),
       ),
-      body: TabBarView(
-          controller: controller,
-          children: [FirstPage(list: animalList), SecondPage()]),
+      body: TabBarView(controller: controller, children: [
+        FirstPage(list: animalList),
+        SecondPage(list: animalList)
+      ]),
       bottomNavigationBar: TabBar(controller: controller, tabs: const [
         Tab(
           icon: Icon(
