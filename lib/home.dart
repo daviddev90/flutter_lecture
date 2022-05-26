@@ -14,7 +14,14 @@ class _HomeState extends State<Home> {
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
   bool isLoading = true;
-  String siteName = 'www.daum.net';
+
+  late TextEditingController textController;
+
+  @override
+  void initState() {
+    textController = TextEditingController();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,56 +29,35 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         backgroundColor: Colors.teal,
         title: Center(
-          child: Column(
+          child: Row(
             children: [
-              const Text('WebView'),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  ElevatedButton(
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.red)),
-                      onPressed: () {
-                        setState(() {
-                          siteName = 'google.com';
-                        });
-                        _reloadSite();
-                      },
-                      child: const Text('Google')),
-                  ElevatedButton(
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.green)),
-                      onPressed: () {
-                        setState(() {
-                          siteName = 'naver.com';
-                        });
-                        _reloadSite();
-                      },
-                      child: const Text('Naver')),
-                  ElevatedButton(
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.blue)),
-                      onPressed: () {
-                        setState(() {
-                          siteName = 'daum.net';
-                        });
-                        _reloadSite();
-                      },
-                      child: const Text('Daum'))
-                ],
+              Expanded(
+                //Flexible도 됨
+                child: TextField(
+                  autocorrect: false,
+                  decoration: const InputDecoration(
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white))),
+                  controller: textController,
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
               ),
+              IconButton(
+                  onPressed: () {
+                    _reloadSite();
+                  },
+                  icon: const Icon(Icons.search))
             ],
           ),
         ),
-        toolbarHeight: 100,
+        toolbarHeight: 70,
       ),
       body: Stack(
         children: [
           WebView(
-            initialUrl: 'https://$siteName',
+            initialUrl: 'https://google.com',
             javascriptMode: JavascriptMode.unrestricted,
             onWebViewCreated: (WebViewController webViewController) {
               _controller.complete(webViewController);
@@ -115,6 +101,7 @@ class _HomeState extends State<Home> {
 
   //Functions
   _reloadSite() {
-    _controller.future.then((value) => value.loadUrl('https://$siteName'));
+    _controller.future
+        .then((value) => value.loadUrl('https://${textController.text}'));
   }
 }
