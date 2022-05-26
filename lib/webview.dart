@@ -3,10 +3,8 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'dart:async';
 
 class WebViewPage extends StatefulWidget {
-  final Completer<WebViewController> controller;
   final String initUrl;
-  const WebViewPage({Key? key, required this.controller, required this.initUrl})
-      : super(key: key);
+  const WebViewPage({Key? key, required this.initUrl}) : super(key: key);
 
   @override
   State<WebViewPage> createState() => _WebViewPageState();
@@ -14,18 +12,18 @@ class WebViewPage extends StatefulWidget {
 
 class _WebViewPageState extends State<WebViewPage> {
   bool isLoading = true;
+  final Completer<WebViewController> _controller =
+      Completer<WebViewController>();
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         WebView(
-          initialUrl: widget.initUrl,
+          initialUrl: 'https://${widget.initUrl}',
           javascriptMode: JavascriptMode.unrestricted,
           onWebViewCreated: (WebViewController webViewController) {
-            if (!widget.controller.isCompleted) {
-              widget.controller.complete(webViewController);
-            }
+            _controller.complete(webViewController);
           },
           onPageFinished: (finish) {
             setState(() {
