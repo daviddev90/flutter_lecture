@@ -24,7 +24,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('HI'),
+        title: const Text('JSON Movie'),
       ),
       body: Center(
         child: data.isEmpty
@@ -35,26 +35,12 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   return Padding(
                     padding: const EdgeInsets.fromLTRB(4, 0, 0, 4),
                     child: Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Column(
-                            children: ['Code', 'Name', 'Dept', 'Phone']
-                                .map(
-                                  (e) => Row(
-                                    children: [
-                                      Text(
-                                        e,
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      const SizedBox(
-                                        width: 12,
-                                      ),
-                                      Text(data[idx][e.toLowerCase()]),
-                                    ],
-                                  ),
-                                )
-                                .toList()),
+                      child: Row(
+                        children: [
+                          Image.network(data[idx]['image'], width: 60),
+                          const SizedBox(width: 20),
+                          Text(data[idx]['title'])
+                        ],
                       ),
                     ),
                   );
@@ -65,7 +51,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   //function
   Future<bool> _getJSONData() async {
-    var url = Uri.parse('https://zeushahn.github.io/Test/student2.json');
+    var url = Uri.parse('https://zeushahn.github.io/Test/movies.json');
     var response = await http.get(url);
 
     var dataConvertedJSON = jsonDecode(utf8.decode(response.bodyBytes));
