@@ -32,8 +32,31 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             : ListView.builder(
                 itemCount: data.length,
                 itemBuilder: (context, idx) {
-                  return Card(
-                    child: Text(data[idx]['code']),
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(4, 0, 0, 4),
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Column(
+                            children: ['Code', 'Name', 'Dept', 'Phone']
+                                .map(
+                                  (e) => Row(
+                                    children: [
+                                      Text(
+                                        e,
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      const SizedBox(
+                                        width: 12,
+                                      ),
+                                      Text(data[idx][e.toLowerCase()]),
+                                    ],
+                                  ),
+                                )
+                                .toList()),
+                      ),
+                    ),
                   );
                 }),
       ),
@@ -49,7 +72,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     List result = dataConvertedJSON['results'];
 
     setState(() {
-      data = result;
+      data.addAll(result);
     });
     return true;
   }
