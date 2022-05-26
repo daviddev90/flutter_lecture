@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -32,17 +33,45 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             : ListView.builder(
                 itemCount: data.length,
                 itemBuilder: (context, idx) {
-                  return Padding(
-                    padding: const EdgeInsets.fromLTRB(4, 0, 0, 4),
-                    child: Card(
-                      child: Row(
-                        children: [
-                          Image.network(data[idx]['image'], width: 60),
-                          const SizedBox(width: 20),
-                          Text(data[idx]['title'])
-                        ],
-                      ),
-                    ),
+                  double rnd = Random().nextDouble() * 30 + 10;
+                  return Card(
+                    color: const Color.fromRGBO(255, 255, 255, 0),
+                    child: idx % 2 == 0
+                        ? SizedBox(
+                            height: 80,
+                            child: OverflowBox(
+                              alignment: Alignment.center,
+                              maxHeight: 120 + rnd,
+                              child: Row(
+                                children: [
+                                  Image.network(
+                                    data[idx]['image'],
+                                    height: 120 + rnd,
+                                  ),
+                                  const SizedBox(width: 20),
+                                  Text(data[idx]['title'])
+                                ],
+                              ),
+                            ),
+                          )
+                        : SizedBox(
+                            height: 80,
+                            child: OverflowBox(
+                              alignment: Alignment.center,
+                              maxHeight: 120 + rnd,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text(data[idx]['title']),
+                                  const SizedBox(width: 20),
+                                  Image.network(
+                                    data[idx]['image'],
+                                    height: 120 + rnd,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                   );
                 }),
       ),
