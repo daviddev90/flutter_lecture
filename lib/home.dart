@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_lecture/delete.dart';
+import 'package:flutter_lecture/update.dart';
 import 'package:mysql1/mysql1.dart';
 
 class Home extends StatefulWidget {
@@ -15,32 +17,12 @@ class _HomeState extends State<Home> {
       user: 'root',
       password: 'qwer1234',
       db: 'education');
-
-  //Property
-  late TextEditingController codeController;
-  late TextEditingController nameController;
-  late TextEditingController deptController;
-  late TextEditingController phoneController;
-
-  var textfields = [];
   late List data;
 
   @override
   void initState() {
-    codeController = TextEditingController();
-    nameController = TextEditingController();
-    deptController = TextEditingController();
-    phoneController = TextEditingController();
-
     data = [];
-
-    textfields = [
-      {"ct": codeController, "name": "학번"},
-      {"ct": nameController, "name": "이름"},
-      {"ct": deptController, "name": "학과"},
-      {"ct": phoneController, "name": "번호"},
-    ];
-
+    listAction();
     super.initState();
   }
 
@@ -49,46 +31,63 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Insert & return for CRUD'),
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/insert')
+                    .then((value) => listAction());
+              },
+              icon: const Icon(Icons.add))
+        ],
       ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              ...textfields
-                  .map((e) => TextField(
-                        controller: e["ct"],
-                        decoration:
-                            InputDecoration(labelText: '${e["name"]}을 입력하세요'),
-                        keyboardType: TextInputType.text,
-                      ))
-                  .toList(),
-              const SizedBox(
-                height: 30,
-              ),
-              ElevatedButton(
-                  onPressed: () {
-                    insertAction();
-                  },
-                  child: const Text('입력')),
-              const SizedBox(
-                height: 12,
-              ),
-              ElevatedButton(
-                  onPressed: () {
-                    listAction();
-                  },
-                  child: const Text('출력')),
-              SizedBox(
-                height: 300,
-                child: ListView.builder(
-                  itemCount: data.length,
-                  itemBuilder: (context, index) {
-                    return Text(data[index]['scode']);
-                  },
+          child: ListView.builder(
+            itemCount: data.length,
+            itemBuilder: (context, index) {
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => UpdatePage(
+                            code: data[index]['scode'],
+                            name: data[index]['sname'],
+                            dept: data[index]['sdept'],
+                            phone: data[index]['sphone']),
+                      )).then((value) => listAction());
+                },
+                onLongPress: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DeletePage(
+                            code: data[index]['scode'],
+                            name: data[index]['sname'],
+                            dept: data[index]['sdept'],
+                            phone: data[index]['sphone']),
+                      )).then((value) => listAction());
+                },
+                child: Card(
+                  child: Column(
+                    children: ['Code', 'Name', 'Dept', 'Phone']
+                        .map((e) => Row(
+                              children: [
+                                Text(e,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold)),
+                                const SizedBox(
+                                  width: 8,
+                                ),
+                                Text(data[index]['s${e.toLowerCase()}']),
+                              ],
+                            ))
+                        .toList(),
+                  ),
                 ),
-              )
-            ],
+              );
+            },
           ),
         ),
       ),
@@ -129,30 +128,5 @@ class _HomeState extends State<Home> {
       data = results.toList();
     });
     conn.close();
-  }
-
-  //functions
-  insertAction() async {
-    var conn = await MySqlConnection.connect(settings);
-
-    var result = await conn.query(
-        'insert into student (scode, sname, sdept, sphone) values (?, ?, ?, ?)',
-        [
-          codeController.text,
-          nameController.text,
-          deptController.text,
-          phoneController.text
-        ]);
-    conn.close();
-  }
-
-  hello() async {
-    // var result = await conn.query(
-    //     'insert into student (scode, sname, sdept, sphone) values (?, ?, ?, ?)',
-    //     ['c123', 'bob', '사학과', 25]);
-
-    // await conn.query(
-    // 'update users set age=? where name=?',
-    // [26, 'Bob']);
   }
 }
