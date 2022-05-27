@@ -65,7 +65,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   //function
   Future<bool> _getJSONData() async {
-    var url = Uri.parse('https://zeushahn.github.io/Test/student2.json');
+    var url =
+        Uri.parse('http://localhost:8080/Flutter/studeny_query_flutter.jsp');
     var response = await http.get(url);
 
     var dataConvertedJSON = jsonDecode(utf8.decode(response.bodyBytes));
