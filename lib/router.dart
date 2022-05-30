@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_lecture/home.dart';
 import 'package:flutter_lecture/insert.dart';
+import 'package:flutter_lecture/register.dart';
 
 class MyRouter extends StatelessWidget {
   const MyRouter({Key? key}) : super(key: key);
@@ -9,7 +10,7 @@ class MyRouter extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
-        '/': (context) => const Home(),
+        '/': (context) => const RegisterPage(),
         '/insert': (context) => const InsertPage()
       },
       initialRoute: '/',

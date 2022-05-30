@@ -97,6 +97,7 @@ class _DeletePageState extends State<DeletePage> {
         .query('delete from student where scode=?', [codeController.text]);
     conn.close();
 
+    // ignore: use_build_context_synchronously
     Navigator.pop(context);
   }
 }
