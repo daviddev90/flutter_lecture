@@ -1,7 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_lecture/delete.dart';
-import 'package:flutter_lecture/update.dart';
-import 'package:mysql1/mysql1.dart';
+
+import 'package:http/http.dart' as http;
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -11,87 +12,99 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  var settings = ConnectionSettings(
-      host: 'localhost',
-      port: 3306,
-      user: 'root',
-      password: 'qwer1234',
-      db: 'education');
-  late List data;
+  late TextEditingController _SLController;
+  late TextEditingController _SWController;
+  late TextEditingController _PLController;
+  late TextEditingController _PWController;
+
+  late String _species;
 
   @override
   void initState() {
-    data = [];
-    listAction();
+    _SLController = TextEditingController();
+    _SWController = TextEditingController();
+    _PLController = TextEditingController();
+    _PWController = TextEditingController();
+
+    _species = 'all';
+
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _SLController.dispose();
+    _SWController.dispose();
+    _PLController.dispose();
+    _PWController.dispose();
+
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Insert & return for CRUD'),
-        actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/insert')
-                    .then((value) => listAction());
-              },
-              icon: const Icon(Icons.add))
-        ],
+        title: const Text('iris 품종 예측'),
       ),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: ListView.builder(
-            itemCount: data.length,
-            itemBuilder: (context, index) {
-              return GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => UpdatePage(
-                            code: data[index]['scode'],
-                            name: data[index]['sname'],
-                            dept: data[index]['sdept'],
-                            phone: data[index]['sphone']),
-                      )).then((value) => listAction());
-                },
-                onLongPress: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => DeletePage(
-                            code: data[index]['scode'],
-                            name: data[index]['sname'],
-                            dept: data[index]['sdept'],
-                            phone: data[index]['sphone']),
-                      )).then((value) => listAction());
-                },
-                child: Card(
-                  child: Column(
-                    children: ['Code', 'Name', 'Dept', 'Phone']
-                        .map((e) => Row(
-                              children: [
-                                Text(e,
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold)),
-                                const SizedBox(
-                                  width: 8,
-                                ),
-                                Text(data[index]['s${e.toLowerCase()}']),
-                              ],
-                            ))
-                        .toList(),
-                  ),
-                ),
-              );
-            },
+          padding: const EdgeInsets.all(30.0),
+          child: Column(
+            children: [
+              TextField(
+                controller: _SLController,
+                keyboardType: TextInputType.number,
+                decoration:
+                    const InputDecoration(labelText: 'Sepal Length 길이를 입력해주세요'),
+              ),
+              TextField(
+                controller: _SWController,
+                keyboardType: TextInputType.number,
+                decoration:
+                    const InputDecoration(labelText: 'Sepal Width 길이를 입력해주세요'),
+              ),
+              TextField(
+                controller: _PLController,
+                keyboardType: TextInputType.number,
+                decoration:
+                    const InputDecoration(labelText: 'Petal Length 길이를 입력해주세요'),
+              ),
+              TextField(
+                controller: _PWController,
+                keyboardType: TextInputType.number,
+                decoration:
+                    const InputDecoration(labelText: 'Petal Width 길이를 입력해주세요'),
+              ),
+              const SizedBox(
+                height: 24,
+              ),
+              ElevatedButton(
+                  onPressed: () {
+                    predict();
+                  },
+                  child: const Text('입력')),
+              const SizedBox(height: 16),
+              CircleAvatar(
+                radius: 100,
+                backgroundImage: AssetImage('images/$_species.jpg'),
+              )
+            ],
           ),
         ),
       ),
     );
+  }
+
+  predict() async {
+    var url = Uri.parse(
+        'http://localhost:8080/Rserve/res_iris.jsp?sepalLength=${_SLController.text}&sepalWidth=${_SWController.text}&petalWidth=${_PWController.text}&petalLength=${_PLController.text}');
+    var res = await http.get(url);
+    var resConv = jsonDecode(utf8.decode(res.bodyBytes))['result'];
+    setState(() {
+      _species = resConv;
+      _showDialog(context);
+    });
   }
 
   _showDialog(BuildContext context) {
@@ -99,8 +112,8 @@ class _HomeState extends State<Home> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('입력 결과'),
-            content: const Text('입력이 완료되었습니다.'),
+            title: const Text('품종 예측 결과 결과'),
+            content: Text('입력하신 품종은 $_species 입니다'),
             actions: [
               TextButton(
                   onPressed: () {
@@ -118,15 +131,5 @@ class _HomeState extends State<Home> {
       duration: Duration(seconds: 1),
       backgroundColor: Colors.red,
     ));
-  }
-
-  listAction() async {
-    var conn = await MySqlConnection.connect(settings);
-    var results =
-        await conn.query("select scode, sname, sdept, sphone from student");
-    setState(() {
-      data = results.toList();
-    });
-    conn.close();
   }
 }
